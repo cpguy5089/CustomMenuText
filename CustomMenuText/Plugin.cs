@@ -105,7 +105,7 @@ namespace CustomMenuText
         [OnDisable]
         public void OnDisable()
         {
-            harmony.UnpatchAll("com.headassbtw.custommenutext");
+            harmony.UnpatchSelf();
         }
 
         [OnStart]
@@ -168,26 +168,36 @@ namespace CustomMenuText
                 BottomColor = defaultBottomColor;
             }
 
-
-            switch (Configuration.PluginConfig.Instance.SelectionType)
+            
+            if (Configuration.PluginConfig.Instance.SelectionType == 0)
             {
-                case 0:
-                    //default
-                    setText(EMPTY);
-                    defaultLogo.SetActive(true);
-
-                    break;
-                case 1:
-                    //random
-                    defaultLogo.SetActive(false);
-                    pickRandomEntry();
-                    break;
-                case 2:
-                    //pre-chosen
-                    defaultLogo.SetActive(false);
-                    setText(allEntries[choice]);
-                    break;
+                setText(EMPTY);
+                defaultLogo.SetActive(true);
             }
+            else
+            {
+                switch (Configuration.PluginConfig.Instance.SelectionType)
+                {
+                    case 1:
+                        //random
+                        pickRandomEntry();
+                        break;
+                    case 2:
+                    
+                        //pre-chosen
+                        try
+                        {
+                            setText(allEntries[choice]);
+                        }
+                        catch (Exception e)
+                        {
+                            Plugin.Log.Critical(e);
+                        }
+                        break;
+                }
+                defaultLogo.SetActive(false);
+            }
+            
         }
         
         public void ApplyFont()
@@ -201,6 +211,7 @@ namespace CustomMenuText
             if (arg1.name.Contains("Menu")) // Only run in menu scene
             {
                 TextInit();
+                YeetUpTheText();
             }
         }
 

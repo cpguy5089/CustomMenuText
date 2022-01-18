@@ -209,7 +209,6 @@ namespace CustomMenuText.ViewControllers
                 row2 = row;
                 Plugin.selection_type = 0;
                 Configuration.PluginConfig.Instance.SelectionType = 0;
-                Plugin.instance.YeetUpTheText();
 
                 
             }
@@ -218,7 +217,6 @@ namespace CustomMenuText.ViewControllers
                 Plugin.selection_type = 1;
                 Configuration.PluginConfig.Instance.SelectionType = 1;
                 Plugin.Instance.pickRandomEntry();
-                Plugin.instance.YeetUpTheText();
             }
             if(row > 1)
             {
@@ -227,9 +225,8 @@ namespace CustomMenuText.ViewControllers
                 Plugin.choice = row2;
                 Configuration.PluginConfig.Instance.SelectionType = 2;
                 Configuration.PluginConfig.Instance.SelectedTextEntry = row2;
-                Plugin.instance.YeetUpTheText();
             }
-            
+            Plugin.instance.YeetUpTheText();
         }
         public Cell random = new Cell("Random");
         public Cell defaultt = new Cell("Default");
@@ -397,8 +394,26 @@ namespace CustomMenuText.ViewControllers
             
             try{fontListData.tableView.SelectCellWithIdx(Configuration.PluginConfig.Instance.Font);}
             catch(IndexOutOfRangeException){Plugin.Log.Critical("Tried to select a font beyond the bounds of the list");}
-            Plugin.mainText.font = FontManager.Fonts[Configuration.PluginConfig.Instance.Font];
-            Plugin.bottomText.font = FontManager.Fonts[Configuration.PluginConfig.Instance.Font];
+
+            
+            try
+            {
+                Plugin.mainText.font = FontManager.Fonts[Configuration.PluginConfig.Instance.Font];
+                Plugin.bottomText.font = FontManager.Fonts[Configuration.PluginConfig.Instance.Font];
+            }
+            catch(Exception e)
+            {
+                Plugin.Log.Critical($"{e.GetType()}:");
+                if (Plugin.mainText != null || Plugin.bottomText != null)
+                {
+                    Plugin.Log.Critical("Text object was null");
+                }
+                else
+                {
+                    Plugin.Log.Critical("Tried to set the text object's font beyond the bounds of the font array");
+                    Plugin.Log.Critical($"Slected: {Configuration.PluginConfig.Instance.Font}, Length: {FontManager.Fonts.Count}");
+                }
+            }
         }
         /*public void SetupImageList()
         {
