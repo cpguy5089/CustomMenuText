@@ -45,5 +45,4 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}" #this is gonna give me a stroke
           automatic_release_tag: "latest"
           prerelease: false
-          files: |
-          CustomMenuText.dll
+          files: CustomMenuText.dll
