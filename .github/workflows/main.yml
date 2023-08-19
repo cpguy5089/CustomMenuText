@@ -22,27 +22,26 @@ jobs:
     - name: Build Solution
       run: dotnet build CustomMenuText.sln --configuration Release
 
-      name: Upload Release Artifact
-      uses: actions/upload-artifact@v2.2.3
+    - name: Upload Release Artifact
+      uses: actions/upload-artifact@v2
       with:
         name: CustomMenuText
-        path: CustomMenuText.dll
+        path: path/to/CustomMenuText.dll
 
-    AutoRelease:
+  AutoRelease:
     runs-on: windows-2022
-    needs: [build]
+    needs: build
     steps:
-      
-      - name: Download Release Artifact
-        uses: actions/download-artifact@v2.0.9
-        with:
-          name: CustomMenuText
-      
-      - name: Automatic Releases
-        uses: marvinpinto/action-automatic-releases@latest #maybe this fixed auto release versioning?
-        id: "automatic_releases"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}" #this is gonna give me a stroke
-          automatic_release_tag: "latest"
-          prerelease: false
-          files: CustomMenuText.dll
+    - name: Download Release Artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: CustomMenuText
+
+    - name: Automatic Releases
+      uses: marvinpinto/action-automatic-releases@latest
+      id: automatic_releases
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "latest"
+        prerelease: false
+        files: CustomMenuText.dll
