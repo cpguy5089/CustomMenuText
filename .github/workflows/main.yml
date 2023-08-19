@@ -1,0 +1,49 @@
+name: Build Solution
+
+on:
+  workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '3.1'  # Use the desired version
+
+    - name: Restore Dependencies
+      run: dotnet restore CustomMenuText.sln
+
+    - name: Build Solution
+      run: dotnet build CustomMenuText.sln --configuration Release
+
+      name: Upload Release Artifact
+      uses: actions/upload-artifact@v2.2.3
+      with:
+        name: CustomMenuText
+        path: CustomMenuText.dll
+
+    AutoRelease:
+    runs-on: windows-2022
+    needs: [build]
+    steps:
+      
+      - name: Download Release Artifact
+        uses: actions/download-artifact@v2.0.9
+        with:
+          name: CustomMenuText
+      
+      - name: Automatic Releases
+        uses: marvinpinto/action-automatic-releases@latest #maybe this fixed auto release versioning?
+        id: "automatic_releases"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}" #this is gonna give me a stroke
+          automatic_release_tag: "latest"
+          prerelease: false
+          files: |
+          CustomMenuText.dll
