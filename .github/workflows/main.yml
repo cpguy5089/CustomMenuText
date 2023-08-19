@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-2022 # change to ubuntu-latest if borked
+    runs-on: ubuntu-latest # change to ubuntu-latest if borked
 
     steps:
     - name: Checkout Repository
